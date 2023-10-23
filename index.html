@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Knowledge Base</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+        }
+        .header {
+            background-color: #333;
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #0077B6;
+            color: #fff;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .add-button {
+            background-color: #0077B6;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            display: block;
+            margin: 0 auto;
+            margin-bottom: 10px;
+        }
+        .add-button:hover {
+            background-color: #005B8D;
+        }
+        .search-container {
+            text-align: center;
+        }
+        .search-input {
+            width: 70%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .search-button {
+            background-color: #0077B6;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .search-button:hover {
+            background-color: #005B8D;
+        }
+        .custom-dropdown {
+            position: relative;
+        }
+        .custom-select {
+            display: none;
+        }
+        .custom-select-trigger {
+            display: block;
+            width: 95%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #fff;
+            line-height: 1;
+            transition: background-color 0.3s;
+        }
+        .custom-select-trigger:hover {
+            background-color: #f0f0f0;
+        }
+        .custom-options {
+            display: none;
+            position: absolute;
+            width: 95%;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        .custom-options div {
+            padding: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            background-color: #fff;
+        }
+        .custom-options div:hover {
+            background-color: #f0f0f0;
+        }
+        .custom-text-input {
+            width: 95%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+            transition: background-color 0.3s;
+        }
+        .custom-text-input:focus {
+            background-color: #e6f7ff;
+        }
+    </style>
+    <script>
+        // Close "Status" dropdown when clicking away
+        document.addEventListener('click', function (event) {
+            var customDropdowns = document.querySelectorAll('.custom-dropdown');
+            customDropdowns.forEach(function (customDropdown) {
+                var selectTrigger = customDropdown.querySelector('.custom-select-trigger');
+                var options = customDropdown.querySelector('.custom-options');
+
+                if (event.target !== selectTrigger && event.target !== options) {
+                    options.style.display = 'none';
+                }
+            });
+        });
+
+        function createNewTable() {
+            var errorTable = document.createElement('table');
+            var tableHeaders = ["Error ID", "Status", "Date", "Affected Systems", "Description", "Resolution"];
+
+            var headerRow = errorTable.insertRow(0);
+            for (var i = 0; i < tableHeaders.length; i++) {
+                var headerCell = headerRow.insertCell(i);
+                headerCell.innerHTML = tableHeaders[i];
+            }
+
+            var newRow = errorTable.insertRow(1);
+            for (var i = 0; i < tableHeaders.length; i++) {
+                var newCell = newRow.insertCell(i);
+                if (tableHeaders[i] === "Status") {
+                    var customDropdown = document.createElement('div');
+                    customDropdown.className = 'custom-dropdown';
+
+                    var selectTrigger = document.createElement('div');
+                    selectTrigger.className = 'custom-select-trigger';
+                    selectTrigger.textContent = 'Select Status';
+
+                    var options = document.createElement('div');
+                    options.className = 'custom-options';
+                    var statusOptions = ["Completed", "Started", "Not Started"];
+                    for (var j = 0; j < statusOptions.length; j++) {
+                        var option = document.createElement('div');
+                        option.textContent = statusOptions[j];
+                        options.appendChild(option);
+                    }
+
+                    customDropdown.appendChild(selectTrigger);
+                    customDropdown.appendChild(options);
+                    newCell.appendChild(customDropdown);
+
+                    selectTrigger.addEventListener('click', function () {
+                        options.style.display = options.style.display === 'block' ? 'none' : 'block';
+                    });
+
+                    options.addEventListener('click', function (e) {
+                        selectTrigger.textContent = e.target.textContent;
+                        options.style.display = 'none';
+                    });
+                } else {
+                    var input = document.createElement('textarea');
+                    input.placeholder = 'Enter ' + tableHeaders[i];
+                    input.className = 'custom-text-input';
+                    input.addEventListener('input', function () {
+                        this.style.height = 'auto';
+                        this.style.height = (this.scrollHeight) + 'px';
+                    });
+                    newCell.appendChild(input);
+                }
+            }
+
+            document.body.appendChild(errorTable);
+        }
+
+        function search() {
+            var searchInput = document.getElementById('search-input').value;
+            alert('Searching for: ' + searchInput);
+        }
+    </script>
+</head>
+<body>
+    <div class="header">
+        <h1>Knowledge Base</h1>
+    </div>
+    <div class="container">
+        <button onclick="createNewTable()" class="add-button">Create New Ticket</button>
+
+        <div class="search-container">
+            <input id="search-input" class="search-input" type="text" placeholder="Search...">
+            <button onclick="search()" class="search-button">Search</button>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
